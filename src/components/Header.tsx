@@ -1,10 +1,11 @@
 
 import React from "react";
-import { Bitcoin, RefreshCw, AlertTriangle, Clock } from "lucide-react";
+import { Bitcoin, RefreshCw, AlertTriangle, Clock, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AlertsManager from "./AlertsManager";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTheme } from "@/hooks/useTheme";
 
 interface HeaderProps {
   onRefresh: () => void;
@@ -14,6 +15,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing, lastUpdated }) => {
   const isCached = localStorage.getItem("using_fallback_data") === "true";
+  const { theme, toggleTheme } = useTheme();
   
   return (
     <header className="flex items-center justify-between p-2 border-b">
@@ -61,6 +63,19 @@ const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing, lastUpdated })
             </Tooltip>
           </TooltipProvider>
         )}
+        
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={toggleTheme}
+          className="p-2 mr-2"
+        >
+          {theme === "dark" ? (
+            <Sun className="h-4 w-4" />
+          ) : (
+            <Moon className="h-4 w-4" />
+          )}
+        </Button>
         
         <Button
           variant="outline"
