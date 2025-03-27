@@ -3,6 +3,7 @@ import React from "react";
 import { Bitcoin, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import AlertsManager from "./AlertsManager";
 
 interface HeaderProps {
   onRefresh: () => void;
@@ -19,6 +20,8 @@ const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing, lastUpdated })
       </div>
       
       <div className="flex items-center gap-2">
+        <AlertsManager />
+        
         {lastUpdated && (
           <span className="text-xs text-muted-foreground mr-2">
             Updated: {lastUpdated.toLocaleTimeString()}

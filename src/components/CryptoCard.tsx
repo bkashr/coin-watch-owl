@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { isInWatchlist, saveToWatchlist, removeFromWatchlist } from "@/services/storageService";
 import { toast } from "sonner";
 import { formatPrice } from "@/lib/formatters";
+import AlertDialog from "./AlertDialog";
 
 interface CryptoCardProps {
   crypto: Cryptocurrency;
@@ -66,6 +67,8 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ crypto, onWatchlistUpdate }) =>
             )}
             <span>{Math.abs(crypto.price_change_percentage_24h).toFixed(2)}%</span>
           </div>
+          
+          <AlertDialog crypto={crypto} />
           
           <Star 
             className={cn(

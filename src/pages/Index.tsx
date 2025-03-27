@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import { Cryptocurrency, fetchTopCryptos, searchCryptos } from "@/services/cryptoApi";
 import { useDebounceCallback } from "@/hooks/useDebounce";
 import { toast } from "sonner";
+import { checkPriceAlerts } from "@/services/alertService";
 
 const Index = () => {
   const [cryptos, setCryptos] = useState<Cryptocurrency[]>([]);
@@ -19,6 +20,9 @@ const Index = () => {
     setCryptos(data);
     setLastUpdated(new Date());
     setIsLoading(false);
+    
+    // Check for price alerts
+    checkPriceAlerts(data);
   }, []);
   
   const refreshData = useCallback(async () => {
@@ -35,12 +39,15 @@ const Index = () => {
       }
       setLastUpdated(new Date());
       toast.success("Cryptocurrency data refreshed");
+      
+      // Check for price alerts
+      checkPriceAlerts(cryptos);
     } catch (error) {
       toast.error("Failed to refresh data");
     } finally {
       setIsRefreshing(false);
     }
-  }, [isRefreshing, searchQuery]);
+  }, [isRefreshing, searchQuery, cryptos]);
   
   const debouncedSearch = useDebounceCallback(async (query: string) => {
     setSearchQuery(query);
@@ -51,6 +58,9 @@ const Index = () => {
       setCryptos(results);
       setLastUpdated(new Date());
       setIsLoading(false);
+      
+      // Check for price alerts with new results
+      checkPriceAlerts(results);
     } else {
       fetchCryptos();
     }
