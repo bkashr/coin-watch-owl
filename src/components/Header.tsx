@@ -1,9 +1,10 @@
 
 import React from "react";
-import { Bitcoin, RefreshCw } from "lucide-react";
+import { Bitcoin, RefreshCw, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AlertsManager from "./AlertsManager";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface HeaderProps {
   onRefresh: () => void;
@@ -12,6 +13,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing, lastUpdated }) => {
+  const isCached = localStorage.getItem("using_fallback_data") === "true";
+  
   return (
     <header className="flex items-center justify-between p-2 border-b">
       <div className="flex items-center gap-2">
@@ -21,6 +24,22 @@ const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing, lastUpdated })
       
       <div className="flex items-center gap-2">
         <AlertsManager />
+        
+        {isCached && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center text-amber-500">
+                  <AlertTriangle className="h-4 w-4 mr-1" />
+                  <span className="text-xs">Using cached data</span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>CoinGecko API is unavailable. Using cached data.</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
         
         {lastUpdated && (
           <span className="text-xs text-muted-foreground mr-2">

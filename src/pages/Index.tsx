@@ -14,15 +14,31 @@ const Index = () => {
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   
+  const updateFallbackStatus = (isFallback: boolean) => {
+    localStorage.setItem("using_fallback_data", isFallback.toString());
+  };
+  
   const fetchCryptos = useCallback(async () => {
     setIsLoading(true);
-    const data = await fetchTopCryptos(50);
-    setCryptos(data);
-    setLastUpdated(new Date());
-    setIsLoading(false);
-    
-    // Check for price alerts
-    checkPriceAlerts(data);
+    try {
+      const data = await fetchTopCryptos(50);
+      setCryptos(data);
+      setLastUpdated(new Date());
+      
+      // Set fallback status based on comparing with known fallback data IDs
+      const isFallback = data.length === 5 && 
+        data[0].id === "bitcoin" && 
+        data[1].id === "ethereum";
+      updateFallbackStatus(isFallback);
+      
+      // Check for price alerts
+      checkPriceAlerts(data);
+    } catch (error) {
+      updateFallbackStatus(true);
+      console.error("Error in fetchCryptos:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
   
   const refreshData = useCallback(async () => {
@@ -33,16 +49,29 @@ const Index = () => {
       if (searchQuery.trim()) {
         const data = await searchCryptos(searchQuery);
         setCryptos(data);
+        
+        // Set fallback status based on data source
+        const isFallback = data.length <= 5 && 
+          data.some(c => c.id === "bitcoin" || c.id === "ethereum");
+        updateFallbackStatus(isFallback);
       } else {
         const data = await fetchTopCryptos(50);
         setCryptos(data);
+        
+        // Set fallback status based on data source
+        const isFallback = data.length === 5 && 
+          data[0].id === "bitcoin" && 
+          data[1].id === "ethereum";
+        updateFallbackStatus(isFallback);
       }
+      
       setLastUpdated(new Date());
       toast.success("Cryptocurrency data refreshed");
       
       // Check for price alerts
       checkPriceAlerts(cryptos);
     } catch (error) {
+      updateFallbackStatus(true);
       toast.error("Failed to refresh data");
     } finally {
       setIsRefreshing(false);
@@ -54,13 +83,23 @@ const Index = () => {
     
     if (query.trim()) {
       setIsLoading(true);
-      const results = await searchCryptos(query);
-      setCryptos(results);
-      setLastUpdated(new Date());
-      setIsLoading(false);
-      
-      // Check for price alerts with new results
-      checkPriceAlerts(results);
+      try {
+        const results = await searchCryptos(query);
+        setCryptos(results);
+        setLastUpdated(new Date());
+        
+        // Set fallback status based on data source
+        const isFallback = results.length <= 5 && 
+          results.some(c => c.id === "bitcoin" || c.id === "ethereum");
+        updateFallbackStatus(isFallback);
+        
+        // Check for price alerts with new results
+        checkPriceAlerts(results);
+      } catch (error) {
+        updateFallbackStatus(true);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       fetchCryptos();
     }
