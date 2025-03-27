@@ -194,8 +194,7 @@ export const fetchTopCryptos = async (count: number = 20): Promise<Cryptocurrenc
         headers: { 
           'Accept': 'application/json',
           'Content-Type': 'application/json'
-        },
-        timeout: 5000 // 5 second timeout
+        }
       }
     );
     
@@ -253,8 +252,7 @@ export const searchCryptos = async (query: string): Promise<Cryptocurrency[]> =>
         headers: { 
           'Accept': 'application/json',
           'Content-Type': 'application/json'
-        },
-        timeout: 5000 // 5 second timeout
+        }
       }
     );
     
@@ -289,8 +287,7 @@ export const searchCryptos = async (query: string): Promise<Cryptocurrency[]> =>
         headers: { 
           'Accept': 'application/json',
           'Content-Type': 'application/json'
-        },
-        timeout: 5000 // 5 second timeout
+        }
       }
     );
     

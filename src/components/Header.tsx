@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Bitcoin, RefreshCw, AlertTriangle } from "lucide-react";
+import { Bitcoin, RefreshCw, AlertTriangle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AlertsManager from "./AlertsManager";
@@ -42,10 +42,26 @@ const Header: React.FC<HeaderProps> = ({ onRefresh, isRefreshing, lastUpdated })
         )}
         
         {lastUpdated && (
-          <span className="text-xs text-muted-foreground mr-2">
-            Updated: {lastUpdated.toLocaleTimeString()}
-          </span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center text-xs text-muted-foreground mr-2">
+                  <Clock className="h-3 w-3 mr-1" />
+                  <span>
+                    {lastUpdated.toLocaleTimeString()}
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <div className="text-xs">
+                  <p>Auto-refreshes every 5 minutes</p>
+                  <p>Manual refresh has 30 second cooldown</p>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )}
+        
         <Button
           variant="outline"
           size="sm"
