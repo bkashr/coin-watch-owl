@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
+=======
+
+import React, { useState } from "react";
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
 import { getAlerts, removeAlert, PriceAlert } from "@/services/alertService";
 import { formatPrice } from "@/lib/formatters";
 import { Bell, Trash2 } from "lucide-react";
@@ -7,6 +12,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { toast } from "sonner";
 
 const AlertsManager: React.FC = () => {
+<<<<<<< HEAD
   const [alerts, setAlerts] = useState<PriceAlert[]>([]);
   const [open, setOpen] = useState(false);
   
@@ -24,6 +30,15 @@ const AlertsManager: React.FC = () => {
     refreshAlerts();
   }, []);
   
+=======
+  const [alerts, setAlerts] = useState<PriceAlert[]>(getAlerts());
+  const [open, setOpen] = useState(false);
+  
+  const refreshAlerts = () => {
+    setAlerts(getAlerts());
+  };
+  
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
       refreshAlerts();
@@ -31,6 +46,7 @@ const AlertsManager: React.FC = () => {
     setOpen(isOpen);
   };
   
+<<<<<<< HEAD
   const handleRemoveAlert = async (alertId: string) => {
     try {
       await removeAlert(alertId);
@@ -40,12 +56,22 @@ const AlertsManager: React.FC = () => {
       console.error('Error removing alert:', error);
       toast.error("Failed to remove alert");
     }
+=======
+  const handleRemoveAlert = (alertId: string) => {
+    removeAlert(alertId);
+    refreshAlerts();
+    toast.success("Alert removed");
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
   };
   
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>
+<<<<<<< HEAD
         <Button variant="secondary" size="sm" className="flex gap-2 text-foreground">
+=======
+        <Button variant="outline" size="sm" className="flex gap-2">
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
           <Bell className="h-4 w-4" /> Alerts {alerts.length > 0 && `(${alerts.length})`}
         </Button>
       </SheetTrigger>

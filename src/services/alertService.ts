@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
 import { toast } from "sonner";
 
 export interface PriceAlert {
@@ -13,6 +17,7 @@ export interface PriceAlert {
 
 const ALERTS_STORAGE_KEY = "coinwatch_price_alerts";
 
+<<<<<<< HEAD
 export const getAlerts = async (): Promise<PriceAlert[]> => {
   try {
     const result = await chrome.storage.local.get(ALERTS_STORAGE_KEY);
@@ -91,6 +96,43 @@ export const checkPriceAlerts = async (cryptos: any[]): Promise<void> => {
   } catch (error) {
     console.error('Error checking price alerts:', error);
   }
+=======
+export const saveAlert = (alert: PriceAlert): void => {
+  const alerts = getAlerts();
+  alerts.push(alert);
+  localStorage.setItem(ALERTS_STORAGE_KEY, JSON.stringify(alerts));
+};
+
+export const getAlerts = (): PriceAlert[] => {
+  const alertsString = localStorage.getItem(ALERTS_STORAGE_KEY);
+  return alertsString ? JSON.parse(alertsString) : [];
+};
+
+export const removeAlert = (alertId: string): void => {
+  const alerts = getAlerts();
+  const updatedAlerts = alerts.filter(alert => alert.id !== alertId);
+  localStorage.setItem(ALERTS_STORAGE_KEY, JSON.stringify(updatedAlerts));
+};
+
+export const checkPriceAlerts = (cryptos: any[]): void => {
+  const alerts = getAlerts();
+  
+  alerts.forEach(alert => {
+    const crypto = cryptos.find(c => c.id === alert.cryptoId);
+    
+    if (!crypto) return;
+    
+    const currentPrice = crypto.current_price;
+    const shouldTrigger = alert.isAbove 
+      ? currentPrice >= alert.targetPrice 
+      : currentPrice <= alert.targetPrice;
+    
+    if (shouldTrigger) {
+      triggerAlert(alert, currentPrice);
+      removeAlert(alert.id);
+    }
+  });
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
 };
 
 const triggerAlert = (alert: PriceAlert, currentPrice: number): void => {

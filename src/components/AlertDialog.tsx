@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { PriceAlert, saveAlert } from "@/services/alertService";
@@ -32,6 +36,7 @@ const AlertDialog: React.FC<AlertDialogProps> = ({ crypto }) => {
     },
   });
 
+<<<<<<< HEAD
   const onSubmit = async (data: AlertFormValues) => {
     try {
       const targetPrice = parseFloat(data.targetPrice);
@@ -63,6 +68,34 @@ const AlertDialog: React.FC<AlertDialogProps> = ({ crypto }) => {
       console.error('Error saving alert:', error);
       toast.error("Failed to save alert");
     }
+=======
+  const onSubmit = (data: AlertFormValues) => {
+    const targetPrice = parseFloat(data.targetPrice);
+    
+    if (isNaN(targetPrice)) {
+      toast.error("Please enter a valid price");
+      return;
+    }
+    
+    const alert: PriceAlert = {
+      id: crypto.id + "_" + Date.now(),
+      cryptoId: crypto.id,
+      cryptoName: crypto.name,
+      cryptoSymbol: crypto.symbol,
+      targetPrice,
+      isAbove: data.direction === "above",
+      createdAt: Date.now(),
+      purchaseUrl: data.purchaseUrl || undefined,
+    };
+    
+    saveAlert(alert);
+    
+    toast.success(`Price alert set for ${crypto.name}`, {
+      description: `You'll be notified when the price goes ${data.direction} ${formatPrice(targetPrice)}`,
+    });
+    
+    setOpen(false);
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
   };
 
   return (

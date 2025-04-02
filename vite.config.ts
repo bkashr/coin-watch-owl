@@ -4,13 +4,27 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
+<<<<<<< HEAD
 export default defineConfig({
   plugins: [react()],
+=======
+export default defineConfig(({ mode }) => ({
+  server: {
+    host: "::",
+    port: 8080,
+  },
+  plugins: [
+    react(),
+    mode === 'development' &&
+    componentTagger(),
+  ].filter(Boolean),
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
+<<<<<<< HEAD
   build: {
     outDir: 'dist',
     emptyOutDir: true,
@@ -41,3 +55,6 @@ export default defineConfig({
   },
   base: './', // This ensures assets are loaded correctly in the extension
 });
+=======
+}));
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a

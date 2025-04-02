@@ -5,8 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+<<<<<<< HEAD
     "build": "vite build && node build.js",
     "build:dev": "vite build --mode development && node build.js",
+=======
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -64,7 +69,10 @@
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@tailwindcss/typography": "^0.5.15",
+<<<<<<< HEAD
     "@types/chrome": "^0.0.313",
+=======
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -76,7 +84,10 @@
     "globals": "^15.9.0",
     "lovable-tagger": "^1.1.7",
     "postcss": "^8.4.47",
+<<<<<<< HEAD
     "sharp": "^0.33.5",
+=======
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",

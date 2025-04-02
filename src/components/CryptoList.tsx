@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
 import React, { useState } from "react";
 import { Cryptocurrency } from "@/services/cryptoApi";
 import CryptoCard from "./CryptoCard";
@@ -26,7 +30,11 @@ const CryptoList: React.FC<CryptoListProps> = ({ cryptos, isLoading, onSearch })
   return (
     <div className="space-y-4 w-full">
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+<<<<<<< HEAD
         <h2 className="text-2xl font-bold text-foreground">Cryptocurrency Tracker</h2>
+=======
+        <h2 className="text-2xl font-bold">Cryptocurrency Tracker</h2>
+>>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
         <Input 
           placeholder="Search cryptocurrencies..." 
           className="max-w-xs"
