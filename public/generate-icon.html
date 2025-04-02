@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Icon</title>
+</head>
+<body>
+    <canvas id="iconCanvas" width="128" height="128"></canvas>
+    <script>
+        const canvas = document.getElementById('iconCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Draw yellow circle
+        ctx.beginPath();
+        ctx.arc(64, 64, 60, 0, Math.PI * 2);
+        ctx.fillStyle = '#FFD700';
+        ctx.fill();
+        
+        // Draw black lines
+        ctx.beginPath();
+        ctx.moveTo(30, 64);
+        ctx.lineTo(98, 64);
+        ctx.moveTo(64, 30);
+        ctx.lineTo(64, 98);
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 8;
+        ctx.stroke();
+        
+        // Convert to PNG
+        const dataURL = canvas.toDataURL('image/png');
+        console.log(dataURL);
+    </script>
+</body>
+</html> 
