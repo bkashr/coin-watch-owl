@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
 import { toast } from "sonner";
 
 export interface Cryptocurrency {
@@ -176,7 +172,6 @@ const FALLBACK_DATA: Cryptocurrency[] = [
 ];
 
 export const fetchTopCryptos = async (count: number = 20): Promise<Cryptocurrency[]> => {
-<<<<<<< HEAD
   try {
     const response = await chrome.runtime.sendMessage({
       type: 'GET_CRYPTO_DATA',
@@ -190,85 +185,12 @@ export const fetchTopCryptos = async (count: number = 20): Promise<Cryptocurrenc
     return response.data;
   } catch (error) {
     console.error('Error in fetchTopCryptos:', error);
-=======
-  const now = Date.now();
-  
-  try {
-    // Don't hammer the API if we just got an error
-    if (now - lastFetchAttempt < COOLDOWN_PERIOD) {
-      console.log("Using fallback data due to recent fetch failure");
-      toast.info("CoinGecko API is cooling down. Using cached data.", {
-        duration: 3000,
-        id: "api-cooldown" // Prevent multiple toasts
-      });
-      return FALLBACK_DATA;
-    }
-    
-    lastFetchAttempt = now;
-    
-    const response = await fetch(
-      `${API_BASE_URL}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${count}&page=1&sparkline=false`,
-      { 
-        headers: { 
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-    
-    if (response.status === 429) {
-      // Rate limit exceeded
-      console.log("Rate limit exceeded, using fallback data");
-      toast.error("API rate limit exceeded. Using cached data instead.", {
-        duration: 3000,
-        id: "rate-limit" // Prevent multiple toasts
-      });
-      return FALLBACK_DATA;
-    }
-    
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching cryptocurrencies:", error);
-    
-    // Only show toast once
-    toast.error("Failed to fetch cryptocurrency data. Using cached data.", {
-      duration: 3000,
-      id: "fetch-error" // Prevent multiple toasts
-    });
-    
->>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
     return FALLBACK_DATA;
   }
 };
 
 export const searchCryptos = async (query: string): Promise<Cryptocurrency[]> => {
   try {
-<<<<<<< HEAD
-    const response = await chrome.runtime.sendMessage({
-      type: 'GET_CRYPTO_DATA',
-      count: 100 // Get more results for search
-    });
-
-    if (!response.success) {
-      throw new Error(response.error || 'Failed to fetch crypto data');
-    }
-
-    const data = response.data;
-    return data.filter(crypto => 
-      crypto.name.toLowerCase().includes(query.toLowerCase()) ||
-      crypto.symbol.toLowerCase().includes(query.toLowerCase())
-    );
-  } catch (error) {
-    console.error('Error in searchCryptos:', error);
-    return FALLBACK_DATA.filter(crypto => 
-      crypto.name.toLowerCase().includes(query.toLowerCase()) ||
-      crypto.symbol.toLowerCase().includes(query.toLowerCase())
-    );
-=======
     const now = Date.now();
     
     // Don't hammer the API if we just got an error
@@ -353,6 +275,5 @@ export const searchCryptos = async (query: string): Promise<Cryptocurrency[]> =>
     );
     
     return results.length > 0 ? results : FALLBACK_DATA;
->>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
   }
 };

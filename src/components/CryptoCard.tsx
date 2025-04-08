@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Cryptocurrency } from "@/services/cryptoApi";
 import { Star, TrendingDown, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-<<<<<<< HEAD
 import { isInWatchlist, addToWatchlist, removeFromWatchlist } from "@/services/storageService";
-=======
-import { isInWatchlist, saveToWatchlist, removeFromWatchlist } from "@/services/storageService";
->>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
 import { toast } from "sonner";
 import { formatPrice } from "@/lib/formatters";
 import AlertDialog from "./AlertDialog";
@@ -22,7 +14,6 @@ interface CryptoCardProps {
 }
 
 const CryptoCard: React.FC<CryptoCardProps> = ({ crypto, onWatchlistUpdate }) => {
-<<<<<<< HEAD
   const [inWatchlist, setInWatchlist] = React.useState<boolean>(false);
   
   React.useEffect(() => {
@@ -42,19 +33,6 @@ const CryptoCard: React.FC<CryptoCardProps> = ({ crypto, onWatchlistUpdate }) =>
       toast.success(`${crypto.name} removed from watchlist`);
     } else {
       await addToWatchlist(crypto.id);
-=======
-  const [inWatchlist, setInWatchlist] = React.useState<boolean>(isInWatchlist(crypto.id));
-  
-  const handleWatchlistToggle = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    
-    if (inWatchlist) {
-      removeFromWatchlist(crypto.id);
-      setInWatchlist(false);
-      toast.success(`${crypto.name} removed from watchlist`);
-    } else {
-      saveToWatchlist(crypto.id);
->>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
       setInWatchlist(true);
       toast.success(`${crypto.name} added to watchlist`);
     }

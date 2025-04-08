@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Cryptocurrency } from "@/services/cryptoApi";
 import CryptoCard from "./CryptoCard";
 import { Input } from "@/components/ui/input";
@@ -17,24 +13,39 @@ interface CryptoListProps {
 
 const CryptoList: React.FC<CryptoListProps> = ({ cryptos, isLoading, onSearch }) => {
   const [activeTab, setActiveTab] = useState<string>("all");
-  const [watchlistIds, setWatchlistIds] = useState<string[]>(getWatchlist());
-  
-  const handleWatchlistUpdate = () => {
-    setWatchlistIds(getWatchlist());
+  const [watchlistIds, setWatchlistIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const loadWatchlist = async () => {
+      try {
+        const list = await getWatchlist();
+        setWatchlistIds(Array.isArray(list) ? list : []);
+      } catch (error) {
+        console.error('Error loading watchlist:', error);
+        setWatchlistIds([]);
+      }
+    };
+    loadWatchlist();
+  }, []);
+
+  const handleWatchlistUpdate = async () => {
+    try {
+      const list = await getWatchlist();
+      setWatchlistIds(Array.isArray(list) ? list : []);
+    } catch (error) {
+      console.error('Error updating watchlist:', error);
+      setWatchlistIds([]);
+    }
   };
-  
+
   const filteredCryptos = activeTab === "watchlist" 
     ? cryptos.filter(crypto => watchlistIds.includes(crypto.id))
     : cryptos;
-  
+
   return (
     <div className="space-y-4 w-full">
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-<<<<<<< HEAD
         <h2 className="text-2xl font-bold text-foreground">Cryptocurrency Tracker</h2>
-=======
-        <h2 className="text-2xl font-bold">Cryptocurrency Tracker</h2>
->>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
         <Input 
           placeholder="Search cryptocurrencies..." 
           className="max-w-xs"
@@ -42,7 +53,7 @@ const CryptoList: React.FC<CryptoListProps> = ({ cryptos, isLoading, onSearch })
         />
       </div>
       
-      <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
+      <Tabs defaultValue="all" onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-2 max-w-xs">
           <TabsTrigger value="all">All Coins</TabsTrigger>
           <TabsTrigger value="watchlist">Watchlist</TabsTrigger>

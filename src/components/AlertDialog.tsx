@@ -1,176 +1,117 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { PriceAlert, saveAlert } from "@/services/alertService";
-import { Cryptocurrency } from "@/services/cryptoApi";
-import { Bell } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Bell } from "lucide-react";
+import { Cryptocurrency } from "@/services/cryptoApi";
+import { addToWatchlist } from "@/services/storageService";
 import { toast } from "sonner";
-import { formatPrice } from "@/lib/formatters";
 
 interface AlertDialogProps {
   crypto: Cryptocurrency;
 }
 
-interface AlertFormValues {
-  targetPrice: string;
-  direction: "above" | "below";
-  purchaseUrl: string;
-}
-
 const AlertDialog: React.FC<AlertDialogProps> = ({ crypto }) => {
   const [open, setOpen] = useState(false);
-  
-  const form = useForm<AlertFormValues>({
-    defaultValues: {
-      targetPrice: crypto.current_price.toString(),
-      direction: "above",
-      purchaseUrl: "",
-    },
-  });
+  const [targetPrice, setTargetPrice] = useState("");
+  const [condition, setCondition] = useState("above");
+  const [purchaseUrl, setPurchaseUrl] = useState("");
 
-<<<<<<< HEAD
-  const onSubmit = async (data: AlertFormValues) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!targetPrice || isNaN(Number(targetPrice))) {
+      toast.error("Please enter a valid target price");
+      return;
+    }
+
     try {
-      const targetPrice = parseFloat(data.targetPrice);
-      
-      if (isNaN(targetPrice)) {
-        toast.error("Please enter a valid price");
-        return;
-      }
-      
-      const alert: PriceAlert = {
-        id: crypto.id + "_" + Date.now(),
+      await addToWatchlist({
         cryptoId: crypto.id,
         cryptoName: crypto.name,
         cryptoSymbol: crypto.symbol,
-        targetPrice,
-        isAbove: data.direction === "above",
+        targetPrice: Number(targetPrice),
+        isAbove: condition === "above",
         createdAt: Date.now(),
-        purchaseUrl: data.purchaseUrl || undefined,
-      };
-      
-      await saveAlert(alert);
-      
-      toast.success(`Price alert set for ${crypto.name}`, {
-        description: `You'll be notified when the price goes ${data.direction} ${formatPrice(targetPrice)}`,
+        purchaseUrl: purchaseUrl || undefined
       });
-      
+
+      toast.success("Price alert created successfully!");
       setOpen(false);
+      setTargetPrice("");
+      setCondition("above");
+      setPurchaseUrl("");
     } catch (error) {
-      console.error('Error saving alert:', error);
-      toast.error("Failed to save alert");
+      console.error("Error creating alert:", error);
+      toast.error("Failed to create price alert");
     }
-=======
-  const onSubmit = (data: AlertFormValues) => {
-    const targetPrice = parseFloat(data.targetPrice);
-    
-    if (isNaN(targetPrice)) {
-      toast.error("Please enter a valid price");
-      return;
-    }
-    
-    const alert: PriceAlert = {
-      id: crypto.id + "_" + Date.now(),
-      cryptoId: crypto.id,
-      cryptoName: crypto.name,
-      cryptoSymbol: crypto.symbol,
-      targetPrice,
-      isAbove: data.direction === "above",
-      createdAt: Date.now(),
-      purchaseUrl: data.purchaseUrl || undefined,
-    };
-    
-    saveAlert(alert);
-    
-    toast.success(`Price alert set for ${crypto.name}`, {
-      description: `You'll be notified when the price goes ${data.direction} ${formatPrice(targetPrice)}`,
-    });
-    
-    setOpen(false);
->>>>>>> d008fd004d969d09894b64d4d2247ff805d8217a
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <Bell className="h-4 w-4" />
+        <Button variant="ghost" size="icon" className="hover:bg-muted">
+          <Bell className="h-5 w-5" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Set Price Alert for {crypto.name}</DialogTitle>
+          <DialogTitle>Create Price Alert</DialogTitle>
+          <DialogDescription>
+            Set a price alert for {crypto.name} ({crypto.symbol.toUpperCase()})
+          </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
-            <FormField
-              control={form.control}
-              name="targetPrice"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Target Price (USD)</FormLabel>
-                  <FormControl>
-                    <Input type="number" step="0.0001" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="direction"
-              render={({ field }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel>Alert me when price goes:</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex gap-4"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="above" id="above" />
-                        <label htmlFor="above">Above target</label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="below" id="below" />
-                        <label htmlFor="below">Below target</label>
-                      </div>
-                    </RadioGroup>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="purchaseUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Purchase URL (optional)</FormLabel>
-                  <FormControl>
-                    <Input type="url" placeholder="https://example.com" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            
-            <div className="flex justify-end space-x-2 pt-2">
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit">Save Alert</Button>
+        <form onSubmit={handleSubmit}>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="price">Target Price (USD)</Label>
+              <Input
+                id="price"
+                type="number"
+                step="any"
+                value={targetPrice}
+                onChange={(e) => setTargetPrice(e.target.value)}
+                placeholder="Enter target price"
+              />
             </div>
-          </form>
-        </Form>
+            <div className="grid gap-2">
+              <Label>Alert Condition</Label>
+              <RadioGroup value={condition} onValueChange={setCondition}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="above" id="above" />
+                  <Label htmlFor="above">Price goes above target</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="below" id="below" />
+                  <Label htmlFor="below">Price goes below target</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="purchaseUrl">Purchase URL (Optional)</Label>
+              <Input
+                id="purchaseUrl"
+                type="url"
+                value={purchaseUrl}
+                onChange={(e) => setPurchaseUrl(e.target.value)}
+                placeholder="Enter URL to purchase"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="submit">Create Alert</Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
